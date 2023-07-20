@@ -7,10 +7,10 @@ I'm not a fan of [reinventing the wheel](reinventing-the-wheel.md), thus, I've s
 
 ## Converting MD to HTML
 
-* [obsidian-export](https://github.com/zoni/obsidian-export) (Obsidian MD -> [Common MD](https://commonmark.org/))
-* [remarkjs](https://github.com/remarkjs/remark) (Common MD -> HTML)
-* [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (HTML -> Beautiful HTML)
+- [obsidian-export](https://github.com/zoni/obsidian-export) (Obsidian MD -> [Common MD](https://commonmark.org/))
+- [remarkjs](https://github.com/remarkjs/remark) (Common MD -> HTML)
+- [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) (HTML -> Beautiful HTML)
 
 ## Others:
 
-* Obsidian Git to help with [publishing notes from within the Obsidian Vault](connect-obsidian-vault-with-github.md)
+- Obsidian Git to help with [publishing notes from within the Obsidian Vault](connect-obsidian-vault-with-github.md)

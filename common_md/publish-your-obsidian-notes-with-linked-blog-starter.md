@@ -26,5 +26,5 @@ By the end of this tutorial, you'll have a github repository that will automatic
 
 Optionally, you can:
 
-* [Publish Notes within your Obsidian Vault](connect-obsidian-vault-with-github.md) by installing the Obsidian Git plugin
-* [Update the publish settings](update-publish-settings-github-actions.md) to publish your notes to a [custom version](deploy-a-custom-linked-blog-starter.md) of the linked-blog-starter
+- [Publish Notes within your Obsidian Vault](connect-obsidian-vault-with-github.md) by installing the Obsidian Git plugin
+- [Update the publish settings](update-publish-settings-github-actions.md) to publish your notes to a [custom version](deploy-a-custom-linked-blog-starter.md) of the linked-blog-starter

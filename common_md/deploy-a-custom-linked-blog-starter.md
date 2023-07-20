@@ -16,16 +16,16 @@ First, we want to fork the linked-blog-starter repo, then [install](install-link
 1. `npm run dev`
 1. Go to `localhost:3000` in your browser
 
-After doing the installations, you can update the components as you wish. 
+After doing the installations, you can update the components as you wish.
 
 ## Make changes to the forked repository
 
 Here are the [docs for Next.JS](https://nextjs.org/docs) and a few things to know about:
 
-* Update `/next.config.js` to update the redirects
-* Use `/components/misc/preview-link.tsx` to add link previews to any text on hover
-* The [fleeting-notes-website](https://github.com/fleetingnotes/fleeting-notes-website) repository is a fork with lots of good examples (including, post-list, comments, etc.)
-* The `/common_md/` directory is where the markdown files are stored in the [common markdown](https://commonmark.org/) format. Use [obsidian-export](https://github.com/zoni/obsidian-export) to convert your notes to common markdown
+- Update `/next.config.js` to update the redirects
+- Use `/components/misc/preview-link.tsx` to add link previews to any text on hover
+- The [fleeting-notes-website](https://github.com/fleetingnotes/fleeting-notes-website) repository is a fork with lots of good examples (including, post-list, comments, etc.)
+- The `/common_md/` directory is where the markdown files are stored in the [common markdown](https://commonmark.org/) format. Use [obsidian-export](https://github.com/zoni/obsidian-export) to convert your notes to common markdown
 
 ## Publish the repository and link it with an MD repository
 
