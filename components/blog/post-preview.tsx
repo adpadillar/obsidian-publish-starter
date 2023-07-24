@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type Author from "../../interfaces/author";
 import PostMeta from "./post-meta";
+import { useRouter } from "next/router";
 
 type Props = {
   title: string;
@@ -11,8 +12,13 @@ type Props = {
 };
 
 const PostPreview = ({ title, date, excerpt, author, slug }: Props) => {
+  const router = useRouter();
+
   return (
-    <article className="flex items-center py-4 border-b border-gray-200 justify-between w-full">
+    <article
+      onClick={() => router.push(`/${slug}`)}
+      className="flex items-center py-4 border-b border-gray-200 justify-between w-full cursor-pointer hover:opacity-80 transition-opacity"
+    >
       <div>
         <header>
           <h2 className="h4 mb-2">
