@@ -57,6 +57,9 @@ function PostSingle({ title, date, author, content, backlinks }: Props) {
                       {Object.keys(backlinks).length > 0 && (
                         <Backlinks backlinks={backlinks} />
                       )}
+                      {Object.keys(backlinks).length === 0 && (
+                        <p className="text-gray-600">No backlinks yet.</p>
+                      )}
                     </div>
                   </div>
                 </aside>
