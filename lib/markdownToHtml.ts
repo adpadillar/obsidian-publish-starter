@@ -2,9 +2,11 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
-import rehypeSanitize from "rehype-sanitize";
+import rehypePrettyCode from "rehype-pretty-code";
 import rehypeRewrite from "rehype-rewrite";
 import rehypeStringify from "rehype-stringify";
+import remarkMath from "remark-math";
+import rehypeMathJaxSvg from "rehype-mathjax";
 import {
   getLinksMapping,
   getPostBySlug,
@@ -33,13 +35,21 @@ export async function markdownToHtml(markdown: string, currSlug: string) {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype)
-    .use(rehypeSanitize)
+    .use(remarkMath)
     .use(rehypeRewrite, {
       selector: "a",
       rewrite: async (node) =>
         rewriteLinkNodes(node, linkNodeMapping, currSlug),
     })
+    .use(rehypePrettyCode, {
+      theme: "one-dark-pro",
+    })
     .use(rehypeStringify)
+    .use(rehypeMathJaxSvg, {
+      tex: {
+        tags: "ams",
+      },
+    })
     .process(markdown);
   let htmlStr = file.toString();
   return htmlStr;
@@ -56,7 +66,7 @@ export function getMDExcerpt(markdown: string, length: number = 500) {
 export function createNoteNode(title: string, content: string) {
   const mdContentStr = getMDExcerpt(content);
   const htmlStr = renderToStaticMarkup(
-    NotePreview({ title, content: mdContentStr }),
+    NotePreview({ title, content: mdContentStr })
   );
   const noteNode = fromHtml(htmlStr);
   return noteNode;

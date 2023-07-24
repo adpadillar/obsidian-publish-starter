@@ -2,4 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.MathJax[display="true"][jax="SVG"] {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.MathJax[jax="SVG"] {
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
 @import "additional-styles/utils.css";
