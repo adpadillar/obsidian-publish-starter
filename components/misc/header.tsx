@@ -21,16 +21,28 @@ const Header = () => {
       }`}
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          <h2 className="shrink-0 mr-4 md:text-2xl text-lg font-bold tracking-tight md:tracking-tighter leading-tight">
-            <Link
-              href="/"
-              className="block hover:underline"
-              aria-label="My Blog"
-            >
-              axelpadilla.me
-            </Link>
-          </h2>
+        <div
+          className={`flex items-center justify-between transition-all ${
+            top ? "h-16 md:h-20" : "h-12 md:h-16"
+          }`}
+        >
+          <div className="flex items-baseline md:space-x-6 space-x-3 w-full">
+            <h2 className="shrink-0 md:text-2xl md:mr-2 mr-1 text-lg font-bold tracking-tight md:tracking-tighter leading-tight">
+              <Link href="/" className="block hover:underline">
+                axelpadilla.me
+              </Link>
+            </h2>
+            <h2 className="shrink-0 md:text-lg text-base tracking-tight md:tracking-tighter leading-tight">
+              <Link href="/home" className="block hover:underline">
+                home
+              </Link>
+            </h2>
+            <h2 className="shrink-0 md:text-lg text-base tracking-tight md:tracking-tighter leading-tight">
+              <Link href="/Blog/All posts" className="block hover:underline">
+                blog
+              </Link>
+            </h2>
+          </div>
           <ul className="flex grow justify-end flex-wrap items-center">
             <li>
               <button

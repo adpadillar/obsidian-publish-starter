@@ -13,3 +13,23 @@ This website may double up as my blog, as it's a really nice way to write new co
 - [Implementing Server Side Auth With Firebase and Next.js](Blog/Posts/implementing-server-side-auth.md)
 - [Writing a Typesafe getServerSideProps Wrapper for Auth Redirects](Blog/Posts/serverside-auth-redirects.md)
 - [How I sped up my website's deployments by 60%](Blog/Posts/vite-is-fast.md)
+
+## Blog
+
+This website may double up as my blog, as it's a really nice way to write new content. These are my posts:
+
+- [An overview of Big O Notation and an example at Amazon scale](Blog/Posts/big-o-notation-at-amazon-scale.md)
+- [Implementing API Rate Limiting With Upstash and Next.js](Blog/Posts/implementing-rate-limiting.md)
+- [Implementing Server Side Auth With Firebase and Next.js](Blog/Posts/implementing-server-side-auth.md)
+- [Writing a Typesafe getServerSideProps Wrapper for Auth Redirects](Blog/Posts/serverside-auth-redirects.md)
+- [How I sped up my website's deployments by 60%](Blog/Posts/vite-is-fast.md)
+
+## Blog
+
+This website may double up as my blog, as it's a really nice way to write new content. These are my posts:
+
+- [An overview of Big O Notation and an example at Amazon scale](Blog/Posts/big-o-notation-at-amazon-scale.md)
+- [Implementing API Rate Limiting With Upstash and Next.js](Blog/Posts/implementing-rate-limiting.md)
+- [Implementing Server Side Auth With Firebase and Next.js](Blog/Posts/implementing-server-side-auth.md)
+- [Writing a Typesafe getServerSideProps Wrapper for Auth Redirects](Blog/Posts/serverside-auth-redirects.md)
+- [How I sped up my website's deployments by 60%](Blog/Posts/vite-is-fast.md)
