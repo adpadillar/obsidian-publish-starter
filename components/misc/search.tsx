@@ -74,7 +74,7 @@ function Search({ visible, setVisible }) {
     >
       <div
         ref={containerRef}
-        className="max-w-4xl mx-auto flex flex-wrap mt-5 px-5"
+        className="max-w-4xl mx-auto flex flex-wrap mt-5 px-5 pb-5"
       >
         {/* Search Bar */}
         <div className="w-full">
