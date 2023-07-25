@@ -1,5 +1,5 @@
 ---
-title: notes.axelpadilla.me
+title: home
 ---
 
 Welcome to my _Obsidian_ notes! These are all of the (Public) notes in my vault. The best way to get anywhere is to just search what you are looking for.

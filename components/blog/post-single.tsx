@@ -3,6 +3,7 @@ import Author from "../../interfaces/author";
 import Backlinks from "../misc/backlinks";
 import PostBody from "./post-body";
 import PostMeta from "./post-meta";
+import Balancer from "react-wrap-balancer";
 
 type Props = {
   title: string;
@@ -27,7 +28,9 @@ function PostSingle({ title, date, author, content, backlinks }: Props) {
               {/* Article header */}
               <header className="max-w-3xl mb-20">
                 {/* Title */}
-                <h1 className="h1 text-left mb-4 text-6xl">{title}</h1>
+                <h1 className="h1 text-left mb-4 md:text-6xl text-4xl">
+                  <Balancer>{title}</Balancer>
+                </h1>
               </header>
 
               {/* Article content */}
