@@ -83,7 +83,7 @@ function Search({ visible, setVisible }) {
               id="search"
               type="search"
               className="form-input w-full text-gray-800 px-3 py-2 pl-10"
-              placeholder="Search notes.axelpadilla.me"
+              placeholder="Search axelpadilla.me"
               onChange={handleChangeInput}
             />
             <button

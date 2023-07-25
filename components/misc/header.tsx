@@ -28,7 +28,7 @@ const Header = () => {
               className="block hover:underline"
               aria-label="My Blog"
             >
-              notes.axelpadilla.me
+              axelpadilla.me
             </Link>
           </h2>
           <ul className="flex grow justify-end flex-wrap items-center">
