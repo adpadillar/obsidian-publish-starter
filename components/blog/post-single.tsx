@@ -56,9 +56,15 @@ function PostSingle({ title, date, author, content, backlinks }: Props) {
                     <h4 className="text-lg font-bold leading-snug tracking-tight mb-4">
                       Backlinks
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4 max-h-max lg:max-h-[32rem] overflow-y-scroll">
                       {Object.keys(backlinks).length > 0 && (
-                        <Backlinks backlinks={backlinks} />
+                        <div>
+                          <p className="text-gray-600 pb-4">
+                            Found {Object.keys(backlinks).length} backlink
+                            {Object.keys(backlinks).length !== 1 && "s"}.
+                          </p>
+                          <Backlinks backlinks={backlinks} />
+                        </div>
                       )}
                       {Object.keys(backlinks).length === 0 && (
                         <p className="text-gray-600">No backlinks yet.</p>
