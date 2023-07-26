@@ -26,7 +26,7 @@ const Header = () => {
             top ? "h-16 md:h-20" : "h-12 md:h-16"
           }`}
         >
-          <div className="flex items-baseline md:space-x-6 space-x-3 w-full">
+          <div className="flex items-center md:space-x-6 space-x-3 w-full">
             <h2 className="shrink-0 md:text-2xl md:mr-2 mr-1 text-lg font-bold tracking-tight md:tracking-tighter leading-tight">
               <Link href="/" className="block hover:underline">
                 axelpadilla.me
