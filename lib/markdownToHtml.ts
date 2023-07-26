@@ -7,6 +7,7 @@ import rehypeRewrite from "rehype-rewrite";
 import rehypeStringify from "rehype-stringify";
 import remarkMath from "remark-math";
 import rehypeMathJaxSvg from "rehype-mathjax";
+import rehypeRaw from "rehype-raw";
 import {
   getLinksMapping,
   getPostBySlug,
@@ -34,7 +35,10 @@ export async function markdownToHtml(markdown: string, currSlug: string) {
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkRehype)
+    .use(remarkRehype, {
+      allowDangerousHtml: true,
+    })
+    .use(rehypeRaw)
     .use(remarkMath)
     .use(rehypeRewrite, {
       selector: "a",
