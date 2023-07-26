@@ -5,7 +5,7 @@ type Props = {
 
 const NotePreview = ({ title, content }: Props) => {
   return (
-    <span className="note-preview block col-span-2 rounded shadow-sm p-5 bg-white cursor-pointer text-lg hover:bg-gray-50 hover:border-transparent">
+    <span className="note-preview block col-span-2 rounded shadow-inner p-5 bg-gray-50 cursor-pointer text-lg hover:bg-gray-100 hover:border-transparent mb-3">
       <span className="block font-bold leading-snug tracking-tight truncate mb-1">
         {title}
       </span>
