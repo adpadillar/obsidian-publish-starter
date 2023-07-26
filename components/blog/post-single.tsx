@@ -36,7 +36,7 @@ function PostSingle({ title, date, author, content, backlinks }: Props) {
               {/* Article content */}
               <div className="lg:flex lg:justify-between" data-sticky-container>
                 {/* Main content */}
-                <div>
+                <div className="w-full">
                   {/* Article meta */}
                   {(author || date) && (
                     <>
