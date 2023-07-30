@@ -12,7 +12,7 @@ import {
   getLinksMapping,
   getPostBySlug,
   getSlugFromHref,
-  updateMarkdownLinks,
+  rewriteMarkdownLinks,
 } from "./api";
 import removeMd from "remove-markdown";
 import { Element } from "hast-util-select";
@@ -21,7 +21,7 @@ import NotePreview from "../components/misc/note-preview";
 import { fromHtml } from "hast-util-from-html";
 
 export async function markdownToHtml(markdown: string, currSlug: string) {
-  markdown = updateMarkdownLinks(markdown, currSlug);
+  markdown = rewriteMarkdownLinks(markdown, currSlug);
 
   // get mapping of current links
   const links = getLinksMapping()[currSlug] as string[];

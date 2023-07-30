@@ -149,13 +149,27 @@ export const getOutgoingLinks = (
   slug: string
 ) => linkMapping.get(slug) || [];
 
-export function getSlugFromHref(currSlug: string, href: string) {
+/**
+ *
+ * Gets the slug of a markdown file from a link
+ *
+ * @param slug the slug of the markdown file
+ * @param href the href of the link
+ * @returns
+ */
+export function getSlugFromHref(slug: string, href: string) {
   return decodeURI(
-    path.join(...currSlug.split(path.sep).slice(0, -1), href)
+    path.join(...slug.split(path.sep).slice(0, -1), href)
   ).replace(/\.md$/, "");
 }
 
-export function updateMarkdownLinks(markdown: string, currSlug: string) {
+/**
+ *
+ * @param markdown a markdown string
+ * @param slug the slug of the markdown file
+ * @returns a markdownString with links rewritten to be relative to the root of the site
+ */
+export const rewriteMarkdownLinks = (markdown: string, slug: string) => {
   // remove `.md` from links
   markdown = markdown.replaceAll(/(\[[^\[\]]+\]\([^\(\)]+)(\.md)(\))/g, "$1$3");
 
@@ -163,7 +177,7 @@ export function updateMarkdownLinks(markdown: string, currSlug: string) {
   markdown = markdown.replaceAll(
     /(\[[^\[\]]*\]\()([^\(\)]+)(\))/g,
     (m, m1, m2: string, m3) => {
-      const slugDir = path.join(...currSlug.split(path.sep).slice(0, -1));
+      const slugDir = path.join(...slug.split(path.sep).slice(0, -1));
       let relLink = m2;
       if (!m2.startsWith(slugDir)) {
         relLink = path.join(slugDir, m2);
@@ -182,4 +196,4 @@ export function updateMarkdownLinks(markdown: string, currSlug: string) {
     }
   );
   return markdown;
-}
+};
