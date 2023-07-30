@@ -1,30 +1,38 @@
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import PostType from "../interfaces/post";
 import { useRouter } from "next/router";
 import ErrorPage from "next/error";
-import { getPostBySlug, getAllPosts, getLinksMapping } from "../lib/api";
-import { markdownToHtml } from "../lib/markdownToHtml";
-import type PostType from "../interfaces/post";
 import path from "path";
-import PostSingle from "../components/blog/post-single";
+import {
+  getAllPosts,
+  getBacklinks,
+  getLinksMapping,
+  getPostBySlug,
+} from "../lib/api";
+import { parseSlug } from "../lib/utils/parseSlug";
 import Layout from "../components/misc/layout";
 import { NextSeo } from "next-seo";
+import PostSingle from "../components/blog/post-single";
 
-type Items = {
-  title: string;
-  excerpt: string;
-};
-
-type Props = {
+interface NotePageProps {
+  children?: React.ReactNode;
   post: PostType;
-  slug: string;
-  backlinks: { [k: string]: Items };
-};
+  backlinks: {
+    [k: string]: {
+      title: string;
+      excerpt: string;
+    };
+  };
+}
 
-export default function Post({ post, backlinks }: Props) {
+const NotePage: NextPage<NotePageProps> = ({ backlinks, post, children }) => {
   const router = useRouter();
   const description = post.excerpt.slice(0, 155);
-  if (!router.isFallback && !post?.slug) {
-    return <ErrorPage statusCode={404} />;
-  }
+
+  const notFound = !router.isFallback && !post;
+
+  if (notFound) return <ErrorPage statusCode={404} />;
+
   return (
     <>
       {router.isFallback ? (
@@ -61,18 +69,11 @@ export default function Post({ post, backlinks }: Props) {
       )}
     </>
   );
-}
-
-type Params = {
-  params: {
-    slug: string[];
-    backlinks: string[];
-  };
 };
 
-export async function getStaticProps({ params }: Params) {
-  const slug = path.join(...params.slug);
-  const post = await getPostBySlug(slug, [
+export const getStaticProps: GetStaticProps<NotePageProps> = ({ params }) => {
+  const slug = parseSlug(params.slug);
+  const post = getPostBySlug(slug, [
     "title",
     "excerpt",
     "date",
@@ -81,33 +82,30 @@ export async function getStaticProps({ params }: Params) {
     "content",
     "ogImage",
   ]);
-  const content = await markdownToHtml(post.content || "", slug);
-  const linkMapping = await getLinksMapping();
-  const backlinks = Object.keys(linkMapping).filter(
-    (k) => linkMapping[k].includes(post.slug) && k !== post.slug,
+
+  const linkMapping = getLinksMapping();
+  const backlinksSlugs = getBacklinks(linkMapping, post.slug);
+
+  const backlinks = Object.fromEntries(
+    backlinksSlugs.map((slug) => {
+      const post = getPostBySlug(slug, ["title", "excerpt"]);
+      return [slug, post];
+    })
   );
-  const backlinkNodes = Object.fromEntries(
-    await Promise.all(
-      backlinks.map(async (slug) => {
-        const post = await getPostBySlug(slug, ["title", "excerpt"]);
-        return [slug, post];
-      }),
-    ),
-  );
+
+  console.log(backlinks);
 
   return {
     props: {
-      post: {
-        ...post,
-        content,
-      },
-      backlinks: backlinkNodes,
+      post,
+      backlinks,
     },
   };
-}
+};
 
-export async function getStaticPaths() {
-  const posts = await getAllPosts(["slug"]);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = getAllPosts(["slug"]);
+
   return {
     paths: posts.map((post) => {
       return {
@@ -118,4 +116,71 @@ export async function getStaticPaths() {
     }),
     fallback: false,
   };
-}
+};
+
+export default NotePage;
+
+// import { useRouter } from "next/router";
+// import ErrorPage from "next/error";
+// import { getPostBySlug, getAllPosts, getLinksMapping } from "../lib/api";
+// import { markdownToHtml } from "../lib/markdownToHtml";
+// import type PostType from "../interfaces/post";
+// import path from "path";
+// import PostSingle from "../components/blog/post-single";
+// import Layout from "../components/misc/layout";
+// import { NextSeo } from "next-seo";
+
+// type Items = {
+//   title: string;
+//   excerpt: string;
+// };
+
+// type Props = {
+//   post: PostType;
+//   slug: string;
+//   backlinks: { [k: string]: Items };
+// };
+
+// export default function Post({ post, backlinks }: Props) {
+//   const router = useRouter();
+//   const description = post.excerpt.slice(0, 155);
+//   if (!router.isFallback && !post?.slug) {
+//     return <ErrorPage statusCode={404} />;
+//   }
+//   return (
+//     <>
+//       {router.isFallback ? (
+//         <h1>Loading…</h1>
+//       ) : (
+//         <Layout>
+//           <NextSeo
+//             title={post.title}
+//             description={description}
+//             openGraph={{
+//               title: post.title,
+//               description,
+//               type: "article",
+//               images: [
+//                 {
+//                   url: post.ogImage?.url
+//                     ? post.ogImage.url
+//                     : "https://fleetingnotes.app/favicon/512.png",
+//                   width: post.ogImage?.url ? null : 512,
+//                   height: post.ogImage?.url ? null : 512,
+//                   type: null,
+//                 },
+//               ],
+//             }}
+//           />
+//           <PostSingle
+//             title={post.title}
+//             content={post.content}
+//             date={post.date}
+//             author={post.author}
+//             backlinks={backlinks}
+//           />
+//         </Layout>
+//       )}
+//     </>
+//   );
+// }

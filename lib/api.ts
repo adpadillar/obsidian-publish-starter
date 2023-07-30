@@ -3,68 +3,106 @@ import path from "path";
 import matter from "gray-matter";
 import { getFilesRecursively } from "./modules/find-files-recusively.mjs";
 import { getMDExcerpt } from "./markdownToHtml";
+import PostType from "../interfaces/post";
 
 const mdDir = path.join(process.cwd(), process.env.COMMON_MD_DIR);
 
-export function getPostBySlug(slug: string, fields: string[] = []) {
+/**
+ * Returns an inferred post object from a markdown file
+ *
+ * @example
+ * ```ts
+ * const post = getPostBySlug("my-post", ["title", "excerpt"]);
+ * //      ^ { title: string, excerpt: string }
+ * ```
+ *
+ * @param slug the slug of the post
+ * @param fields the fields to return
+ * @returns Pick<PostType, T>
+ */
+export const getPostBySlug = <T extends keyof PostType>(
+  slug: string,
+  fields: T[]
+): Pick<PostType, T> => {
   const realSlug = slug.replace(/\.md$/, "");
-  const fullPath = path.join(mdDir, `${realSlug}.md`);
-  const data = parseFileToObj(fullPath);
+  const data = parseFileToObj(realSlug);
 
-  type Items = {
-    [key: string]: string;
-  };
-
-  const items: Items = {};
-
-  // Ensure only the minimal needed data is exposed
+  // Create a new object with only the specified fields
+  const selectedFields = {} as Pick<PostType, T>;
   fields.forEach((field) => {
-    if (field === "slug") {
-      items[field] = realSlug;
-    }
-
-    if (typeof data[field] !== "undefined") {
-      items[field] = data[field];
-    }
+    selectedFields[field] = data[field];
   });
-  return items;
-}
 
-function parseFileToObj(pathToObj: string) {
-  const fileContents = fs.readFileSync(pathToObj, "utf8");
+  return selectedFields;
+};
+
+/**
+ * Returns all fields of a post object from a markdown file
+ *
+ * @example
+ * ```ts
+ * const post = getPostBySlug("my-folder/my-post");
+ * //      ^ PostType
+ * ```
+ *
+ * @param fullSlug the full slug of the post
+ * @returns PostType
+ */
+const parseFileToObj = (fullSlug: string) => {
+  const fullPath = path.join(mdDir, `${fullSlug}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
-  data["content"] = content;
+  const postData: PostType = {
+    slug: fullSlug,
+    content: content,
+    author: {
+      name: data["author"]?.name || "",
+      picture: data["author"]?.picture || "",
+    },
+    date: data["date"] || "",
+    ogImage: {
+      url: data["ogImage"]?.url || "",
+    },
+    excerpt: data["excerpt"] || getMDExcerpt(content, 500),
+    title: data["title"] || decodeURI(path.basename(fullPath, ".md")),
+  };
 
-  // modify obj
-  if (typeof data["excerpt"] === "undefined") {
-    data["excerpt"] = getMDExcerpt(content, 500);
-  }
-  if (typeof data["title"] === "undefined") {
-    data["title"] = decodeURI(path.basename(pathToObj, ".md"));
-  }
-  if (typeof data["date"] === "object") {
-    data["date"] = data["date"]?.toISOString();
-  } else if (typeof data["date"] !== "undefined") {
-    data["date"] = data["date"].toString();
-  }
-  return data;
-}
+  return postData;
+};
 
-export function getAllPosts(fields: string[] = []) {
+/**
+ *
+ * Get all posts from the markdown directory with the specified fields
+ *
+ * @param fields the fields to return (we always return date for sorting)
+ * @returns
+ */
+export const getAllPosts = <T extends keyof PostType>(fields: T[] = []) => {
   let files = getFilesRecursively(mdDir, /\.md/);
   let posts = files
-    .map((slug) => getPostBySlug(slug, fields))
-    // sort posts by date in descending order
+    .map((slug) => getPostBySlug(slug, [...fields, "date"])) // We add date for sorting
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return posts;
-}
 
-export function getLinksMapping() {
+  return posts;
+};
+
+/**
+ * @example
+ * ```ts
+ * const linkMapping = getLinksMapping();
+ * //      ^ Map<string, string[]>
+ * ```
+ *
+ * @returns a map of slugs to an array of slugs that are linked to in the content
+ */
+export const getLinksMapping = () => {
   const linksMapping = new Map<string, string[]>();
   const postsMapping = new Map(
-    getAllPosts(["slug", "content"]).map((i) => [i.slug, i.content]),
+    getAllPosts(["slug", "content"]).map((i) => [i.slug, i.content])
+    //                                          [key, value]
   );
+
   const allSlugs = new Set(postsMapping.keys());
   postsMapping.forEach((content, slug) => {
     const mdLink = /\[[^\[\]]+\]\(([^\(\)]+)\)/g;
@@ -78,12 +116,42 @@ export function getLinksMapping() {
     }
     linksMapping[slug] = linkSlugs;
   });
+
   return linksMapping;
-}
+};
+
+/**
+ *
+ * Gets the backlinks for a given slug
+ *
+ * @param linkMapping getLinksMapping()
+ * @param slug string
+ * @returns the backlinks for a given slug
+ */
+export const getBacklinks = (
+  linkMapping: Map<string, string[]>,
+  slug: string
+) =>
+  Object.keys(linkMapping).filter((k) => {
+    return linkMapping[k].includes(slug) && k !== slug;
+  });
+
+/**
+ *
+ * Gets the outgoing links for a given slug
+ *
+ * @param linkMapping getLinksMapping()
+ * @param slug string
+ * @returns the outgoing links for a given slug
+ */
+export const getOutgoingLinks = (
+  linkMapping: Map<string, string[]>,
+  slug: string
+) => linkMapping.get(slug) || [];
 
 export function getSlugFromHref(currSlug: string, href: string) {
   return decodeURI(
-    path.join(...currSlug.split(path.sep).slice(0, -1), href),
+    path.join(...currSlug.split(path.sep).slice(0, -1), href)
   ).replace(/\.md$/, "");
 }
 
@@ -111,7 +179,7 @@ export function updateMarkdownLinks(markdown: string, currSlug: string) {
         return `${m1}/${imgPath}${m3}`;
       }
       return m;
-    },
+    }
   );
   return markdown;
 }

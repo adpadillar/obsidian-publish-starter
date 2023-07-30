@@ -5,9 +5,9 @@ type PostType = {
   excerpt: string;
   title: string;
   content: string;
-  date?: string;
-  author?: Author;
-  ogImage?: {
+  date: string;
+  author: Author;
+  ogImage: {
     url: string;
   };
 };
