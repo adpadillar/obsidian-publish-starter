@@ -7,7 +7,8 @@
     "prebuild": "npm run copyimages",
     "build": "npm run prebuild && next build",
     "start": "next start",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "update-md": "rm -rf common_md && mkdir common_md && ./obsidian-export_MacOS-x86_64.bin /Users/axelpadilla/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/obsidian-md common_md"
   },
   "dependencies": {
     "classnames": "^2.3.1",
