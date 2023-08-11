@@ -45,15 +45,28 @@ export async function markdownToHtml(markdown: string, currSlug: string) {
       rewrite: async (node) =>
         rewriteLinkNodes(node, linkNodeMapping, currSlug),
     })
+    .use(rehypeRewrite, {
+      // Selector for class="math-display" and class="math-inline"
+      selector: "span.math-inline, div.math-display",
+      rewrite: async (node) => {
+        // get inner html and console.log it
+        if (node.type === "element") {
+          node.children.forEach((child) => {
+            const typedChild = child as typeof child & { value: string };
+
+            const problematicSymbols = ["_", "\\"];
+            problematicSymbols.forEach((s) => {
+              typedChild.value = typedChild.value.replaceAll(`\\${s}`, s);
+            });
+          });
+        }
+      },
+    })
     .use(rehypePrettyCode, {
       theme: "one-dark-pro",
     })
     .use(rehypeStringify)
-    .use(rehypeMathJaxSvg, {
-      tex: {
-        tags: "ams",
-      },
-    })
+    .use(rehypeMathJaxSvg, {})
     .process(markdown);
   let htmlStr = file.toString();
   return htmlStr;
