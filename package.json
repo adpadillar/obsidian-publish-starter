@@ -11,7 +11,6 @@
     "update-md": "rm -rf common_md && mkdir common_md && ./obsidian-export_MacOS-x86_64.bin /Users/axelpadilla/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/obsidian-md common_md"
   },
   "dependencies": {
-    "canvas": "^2.11.2",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
     "dotenv": "^16.0.3",
