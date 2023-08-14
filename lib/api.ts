@@ -48,6 +48,10 @@ function parseFileToObj(pathToObj: string) {
   } else if (typeof data["date"] !== "undefined") {
     data["date"] = data["date"].toString();
   }
+  if (typeof data["allowed"] === "string") {
+    data["allowed"] = [data["allowed"]]; // protected by default
+  }
+
   return data;
 }
 
@@ -63,7 +67,7 @@ export function getAllPosts(fields: string[] = []) {
 export function getLinksMapping() {
   const linksMapping = new Map<string, string[]>();
   const postsMapping = new Map(
-    getAllPosts(["slug", "content"]).map((i) => [i.slug, i.content]),
+    getAllPosts(["slug", "content"]).map((i) => [i.slug, i.content])
   );
   const allSlugs = new Set(postsMapping.keys());
   postsMapping.forEach((content, slug) => {
@@ -83,7 +87,7 @@ export function getLinksMapping() {
 
 export function getSlugFromHref(currSlug: string, href: string) {
   return decodeURI(
-    path.join(...currSlug.split(path.sep).slice(0, -1), href),
+    path.join(...currSlug.split(path.sep).slice(0, -1), href)
   ).replace(/\.md$/, "");
 }
 
@@ -111,7 +115,7 @@ export function updateMarkdownLinks(markdown: string, currSlug: string) {
         return `${m1}/${imgPath}${m3}`;
       }
       return m;
-    },
+    }
   );
   return markdown;
 }

@@ -7,6 +7,14 @@ import path from "path";
 import PostSingle from "../components/blog/post-single";
 import Layout from "../components/misc/layout";
 import { NextSeo } from "next-seo";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+import { app } from "../lib/firebase";
 
 type Items = {
   title: string;
@@ -20,8 +28,37 @@ type Props = {
 };
 
 export default function Post({ post, backlinks }: Props) {
+  // console.log(post.allowed);
+  const auth = getAuth(app);
+  const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const description = post.excerpt.slice(0, 155);
+
+  if (!post.allowed.includes("*")) {
+    // Page is not allowed to be viewed by everyone
+    if (loading) {
+      return <h1>Loading…</h1>;
+    } else {
+      if (!user) {
+        return (
+          <button
+            onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
+          >
+            No account. Sign in
+          </button>
+        );
+      } else {
+        if (!post.allowed.includes(user.email)) {
+          return (
+            <button onClick={() => signOut(auth)}>
+              Your account is not allowed. Sign Out
+            </button>
+          );
+        }
+      }
+    }
+  }
+
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />;
   }
@@ -80,19 +117,27 @@ export async function getStaticProps({ params }: Params) {
     "author",
     "content",
     "ogImage",
+    "allowed",
   ]);
+
+  if (!post.allowed) {
+    return {
+      notFound: true,
+    };
+  }
+
   const content = await markdownToHtml(post.content || "", slug);
   const linkMapping = await getLinksMapping();
   const backlinks = Object.keys(linkMapping).filter(
-    (k) => linkMapping[k].includes(post.slug) && k !== post.slug,
+    (k) => linkMapping[k].includes(post.slug) && k !== post.slug
   );
   const backlinkNodes = Object.fromEntries(
     await Promise.all(
       backlinks.map(async (slug) => {
         const post = await getPostBySlug(slug, ["title", "excerpt"]);
         return [slug, post];
-      }),
-    ),
+      })
+    )
   );
 
   return {

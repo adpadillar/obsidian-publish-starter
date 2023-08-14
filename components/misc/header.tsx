@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Search from "./search";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "../../lib/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Header = () => {
+  const auth = getAuth(app);
+  const [user, loading] = useAuthState(auth);
   const [top, setTop] = useState(true);
   const [searching, setSearching] = useState(false);
   // detect whether user has scrolled the page down by 10px
@@ -43,7 +48,22 @@ const Header = () => {
               </Link>
             </h2>
           </div>
-          <ul className="flex grow justify-end flex-wrap items-center">
+          <ul className="flex space-x-3 grow justify-end items-center">
+            {!loading && user && (
+              <li>
+                <button onClick={() => signOut(auth)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="48"
+                    viewBox="0 -960 960 960"
+                    width="48"
+                    className="w-6 h-6 fill-current text-gray-400"
+                  >
+                    <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43 102-102H360v-60h363L621-612l43-43 176 176-174 174Z" />
+                  </svg>
+                </button>
+              </li>
+            )}
             <li>
               <button
                 className="w-4 h-4 my-auto mx-2 border-black"
