@@ -43,7 +43,7 @@ const Header = () => {
               </Link>
             </h2>
             <h2 className="shrink-0 md:text-lg text-base tracking-tight md:tracking-tighter leading-tight">
-              <Link href="/Blog/All posts" className="block hover:underline">
+              <Link href="/Blog/posts" className="block hover:underline">
                 blog
               </Link>
             </h2>
