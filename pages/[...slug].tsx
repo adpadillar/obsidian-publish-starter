@@ -15,6 +15,8 @@ import {
   signOut,
 } from "firebase/auth";
 import { app } from "../lib/firebase";
+import Link from "next/link";
+import PreviewLink from "../components/misc/preview-link";
 
 type Items = {
   title: string;
@@ -28,7 +30,6 @@ type Props = {
 };
 
 export default function Post({ post, backlinks }: Props) {
-  // console.log(post.allowed);
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
@@ -37,22 +38,51 @@ export default function Post({ post, backlinks }: Props) {
   if (!post.allowed.includes("*")) {
     // Page is not allowed to be viewed by everyone
     if (loading) {
-      return <h1>Loading…</h1>;
+      return (
+        <div className="bg-gray-50 w-full min-h-screen flex items-center justify-center">
+          <div className="flex flex-col space-y-4 items-center justify-center">
+            <div className="h-12 w-12 rounded-full bg-black animate-bounce" />
+            <strong>Loading...</strong>
+          </div>
+        </div>
+      );
     } else {
       if (!user) {
         return (
-          <button
-            onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
-          >
-            No account. Sign in
-          </button>
+          <Layout>
+            <div className="w-full min-h-screen flex items-center justify-center flex-col space-y-6">
+              <h2 className="font-black text-4xl">No Account Detected</h2>
+
+              <div className="flex space-x-4 text-xl">
+                <PreviewLink href="/home">Go Home</PreviewLink>
+
+                <button
+                  onClick={() =>
+                    signInWithPopup(auth, new GoogleAuthProvider())
+                  }
+                >
+                  Sign in
+                </button>
+              </div>
+            </div>
+          </Layout>
         );
       } else {
         if (!post.allowed.includes(user.email)) {
           return (
-            <button onClick={() => signOut(auth)}>
-              Your account is not allowed. Sign Out
-            </button>
+            <Layout>
+              <div className="w-full min-h-screen flex items-center justify-center flex-col space-y-6">
+                <h2 className="font-black text-4xl">
+                  Your account is not allowed
+                </h2>
+
+                <div className="flex space-x-4 text-xl">
+                  <PreviewLink href="/home">Go Home</PreviewLink>
+
+                  <button onClick={() => signOut(auth)}>Sign Out</button>
+                </div>
+              </div>
+            </Layout>
           );
         }
       }

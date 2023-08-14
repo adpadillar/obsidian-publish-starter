@@ -1,6 +1,6 @@
 ---
 title: hello, i'm axel padilla
-allowed: ["adpadillar25@gmail.com", "a01642700@tec.mx"]
+allowed: "*"
 ---
 
 **I'm a _computer science_ student interested on _ReactJS_, _Typescript_ and other similar technologies.**
