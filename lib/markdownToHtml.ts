@@ -50,9 +50,25 @@ export async function markdownToHtml(markdown: string, currSlug: string) {
             node.children.forEach((child) => {
               const typedChild = child as typeof child & { value: string };
 
-              const problematicSymbols = ["_", "\\", "*"];
+              const beginRegex = /\\begin*{.*}/g;
+              const endRegex = /\\end*{.*}/g;
+              const problematicSymbols = [
+                "_",
+                "*",
+                ">",
+                "<",
+                beginRegex,
+                endRegex,
+              ];
               problematicSymbols.forEach((s) => {
-                typedChild.value = typedChild.value.replaceAll(`\\${s}`, s);
+                if (typeof s === "string") {
+                  typedChild.value = typedChild.value.replaceAll(`\\${s}`, s);
+                  return;
+                }
+
+                typedChild.value = typedChild.value.replaceAll(s, (subs) => {
+                  return subs.replace("\\", "");
+                });
               });
             });
           }
