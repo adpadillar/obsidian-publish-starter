@@ -49,7 +49,7 @@ function parseFileToObj(pathToObj: string) {
     data["date"] = data["date"].toString();
   }
   if (typeof data["allowed"] === "string") {
-    data["allowed"] = [data["allowed"]]; // protected by default
+    data["allowed"] = [data["allowed"].split(", ")]; // protected by default
   }
 
   return data;
